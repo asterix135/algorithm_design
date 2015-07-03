@@ -3,6 +3,7 @@ import matplotlib.pyplot as pyplot
 
 
 def gen_vals(list, func):
+    '''function to generate y values for plot'''
     temp_list = []
     for num in list:
         temp_list.append(func(num))
@@ -25,15 +26,17 @@ def gen_n_to_5thirds (val):
     return val**(5/3)
 
 def generate_chart(value_range):
-
+    '''plot various functions'''
     x_values = gen_vals(value_range, float)
     square_roots = gen_vals(value_range, math.sqrt)
+    # commented out because so much bigger
     # ten_to_n = gen_vals(value_range, gen_ten_to_nth)
     n_to_one_point_five = gen_vals(value_range, gen_n_to1point5)
     two_to_sqrt = gen_vals(value_range, gen_two_to_sqrt_log_n)
     n_to_five_thirds = gen_vals(value_range, gen_n_to_5thirds)
 
     pyplot.plot(x_values, square_roots, label='square roots')
+    # commented out because so much bigger
     # pyplot.plot(x_values, ten_to_n, label = 'ten to the nth')
     pyplot.plot(x_values, n_to_one_point_five, label = 'n to the 1.5')
     pyplot.plot(x_values, two_to_sqrt, label = 'two to the sqrt(lot of n)')
