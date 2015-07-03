@@ -1,5 +1,5 @@
 # Files for Coursera Course "Algorithm Design"
-## by Tim Roughgarden - Stanford
+## course by Tim Roughgarden - Stanford
 
 Coded with Python 3.4
 

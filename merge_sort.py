@@ -4,6 +4,7 @@ RANDOM_LIST = random.sample(range(LIST_LENGTH), LIST_LENGTH)
 # RANDOM_LIST = [4,3,2,1]
 
 def split_sort(number_list):
+    '''Takes a list and sorts it in ascending order'''
     if len(number_list) == 2:
         if number_list[0] > number_list[1]:
             return [number_list[1], number_list[0]]
