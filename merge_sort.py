@@ -1,3 +1,5 @@
+'''Functions to implement Merge/sort algorithm'''
+
 import random
 LIST_LENGTH = 10000
 RANDOM_LIST = random.sample(range(LIST_LENGTH), LIST_LENGTH)

@@ -1,3 +1,5 @@
+"""functions to plot increase in various functions for quiz 1"""
+
 import math
 import matplotlib.pyplot as pyplot
 
