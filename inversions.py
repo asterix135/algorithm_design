@@ -3,7 +3,6 @@
 ## setup stuff
 
 import time
-problem_array = [line.strip() for line in open("IntegerArray.txt", 'r')]
 
 def brute_force(array):
     '''brute force inversion calculation - quadratic speed'''
