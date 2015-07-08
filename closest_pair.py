@@ -3,6 +3,7 @@
 ## setup stuff
 import time
 import math
+import merge_sort as ms
 
 def euc_distance(point1, point2):
     return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
@@ -23,10 +24,14 @@ def brute_force(lst):
 
 def closest_pair(lst):
     start = time.time()
+    list_x_sort = ms.merge_sort(lst, 0)
+    list_y_sort = ms.merge_sort(lst, 1)
+
 
     ## Approach
     ## merge-sort list by x-coordinate (Px)
     ## merge-sort list by y-coordinate (Py)
+
     ## divide and conquer the main list:
     ## Q = left half/ R = right half
     ## base case = 2 or 3 points
@@ -47,44 +52,38 @@ def closest_pair(lst):
     ##          best = dist(p,q); best_pair = (p,q)
     ## return best_pair or null
 
-    pass
+    print ("closest pair run time: " + str(time.time() - start))
+    return None
 
-def merge_sort(lst, idx = 0):
+def cp_split(lst):
     if len(lst) == 2:
-        if lst[0][idx] > lst[1][idx]:
-            return [lst[1], lst[0]]
+        return (lst[0], lst[1])
+    elif len(lst) == 3:
+        dist1 = euc_distance(lst[0], lst[1])
+        dist2 = euc_distance(lst[0], lst[2])
+        dist3 = euc_distance(lst[1], lst[2])
+        if min(dist1, dist2, dist3) == dist1:
+            return (lst[0], lst[1])
+        elif min(dist2, dist3) == dist2:
+            return (lst[0], lst[2])
         else:
-            return lst
-    elif len(lst) <= 1:
-        return lst
+            return (lst[1], lst[2])
     else:
-        list_a = sort(lst[:len(lst)//2], idx)
-        list_b = sort(lst[len(lst)//2:], idx)
-        output_list = merge(list_a, list_b, idx)
-        return output_list
+        left_closest = cp_split(lst[:len(lst)//2])
+        right_closest = cp_split(lst[len(lst//2):])
+        split_closest = closest_split_pair(lst[:len(lst)//2, lst[len(lst)//2 :]])
+        return min(left_closest, right_closest, split_closest)
 
-def merge(list_a, list_b, idx):
-    output_list = []
-    list_a_position = 0
-    list_b_position = 0
-    while list_a_position + list_b_position < len(list_a) + len(list_b):
-        if list_a[list_a_position][idx] < list_b[list_b_position][idx]:
-            output_list.append(list_a[list_a_position])
-            list_a_position += 1
-            if list_a_position == len(list_a):
-                output_list.extend(list_b[list_b_position:])
-                list_b_position = len(list_b)
-        else:
-            output_list.append(list_b[list_b_position])
-            list_b_position += 1
-            if list_b_position == len(list_b):
-                output_list.extend(list_a[list_a_position:])
-                list_a_position = len(list_a)
-    return output_list
+def closest_split_pair(lst1, lst2):
+        return None
 
 def test():
     test_list = [(0, 10), (20, 11), (10, 0), (11, 20), (9,9), (11,11)]
     result = brute_force(test_list)
     print ('closest pair is: ' + str(result[0]) + '.  Distance is: ' + str(result[1]))
+    result2 = closest_pair(test_list)
+    print (result2)
+
+
 
 test()
