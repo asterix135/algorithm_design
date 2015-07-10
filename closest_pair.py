@@ -105,6 +105,7 @@ def plot_performance(upper_limit = 25, increment = 5):
     algorithm_time = []
     x_values = range(5, upper_limit + 1, increment)
     for test_len in x_values:
+        print (test_len)
         lst = generate_random_point_set(test_len)
         start = time.time()
         brute_force(lst)
@@ -121,4 +122,4 @@ def plot_performance(upper_limit = 25, increment = 5):
 
 
 
-plot_performance(5000, 50)
+plot_performance(2000, 50)
