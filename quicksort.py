@@ -3,13 +3,15 @@
 import random
 
 def sort_array(array):
-    quick_sort(array, 0, len(array))
+    ## note - you have to make the starting right len(array) - 1 for the
+    ## for loop to work correctly in partition
+    quick_sort(array, 0, len(array)-1)
 
 def quick_sort(array, left, right):
     if right - left <= 0:
         return
     pivot = partition(array, left, right)
-    quick_sort(array, left, pivot-1)
+    quick_sort(array, left, pivot - 1)
     quick_sort(array, pivot + 1, right)
     return array
 
@@ -22,10 +24,7 @@ def partition(array, left, right):
     # split_idx refers to the break between higher than pivot & less than pivot
     split_idx = left + 1
     # sort_idx refers to the break between sorted & unsorted elements
-    sort_idx = left + 1
-    # while sort_idx < right:
-
-    for sort_idx in range(left + 1, right):
+    for sort_idx in range(left + 1, right + 1):
         if array[sort_idx] < pivot:
             array[sort_idx], array[split_idx] = \
                 array[split_idx], array[sort_idx]
@@ -42,6 +41,4 @@ def test_routine(array_len):
     return input_array
 
 
-print (test_routine(10))
-
-# print (test_routine(3))
+print (test_routine(22))
