@@ -3,20 +3,20 @@
 import random
 
 def sort_array(array):
-    ## note - you have to make the starting right len(array) - 1 for the
-    ## for loop to work correctly in partition
+    '''base call to sort algorithm'''
     quick_sort(array, 0, len(array)-1)
 
 def quick_sort(array, left, right):
+    '''primary recursive subroutine'''
     if right - left <= 0:
         return
     pivot = partition(array, left, right)
     quick_sort(array, left, pivot - 1)
     quick_sort(array, pivot + 1, right)
-    return array
 
 
 def partition(array, left, right):
+    '''sub-routine that actually does the sorting'''
     pivot_idx = random.randrange(left, right)
     pivot = array[pivot_idx]
     if pivot_idx != left:
@@ -33,9 +33,8 @@ def partition(array, left, right):
     array[left], array[split_idx - 1] = array[split_idx - 1], array[left]
     return split_idx -1
 
-
-
 def test_routine(array_len):
+    '''testing array on randomized array'''
     input_array = random.sample(range(array_len), array_len)
     sort_array(input_array)
     return input_array
