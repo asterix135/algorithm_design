@@ -3,7 +3,7 @@
 ## setup stuff
 import time
 import math
-import merge_sort as ms
+import merge_sort_quiz as ms
 import matplotlib.pyplot as pyplot
 import random
 

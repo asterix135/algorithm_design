@@ -1,10 +1,11 @@
 import random
 
+
 def rselect(array, istat):
     """
     Algorithm to return ith order element of an array
     takes array (list) as input
-    ith order counted in normal, not pythonic way
+    ith order counted in pythonic way (1st element is coded as 0th element)
     Will not modify original array
 
     Pseudocode:
