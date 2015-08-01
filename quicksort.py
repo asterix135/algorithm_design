@@ -40,4 +40,4 @@ def test_routine(array_len):
     return input_array
 
 
-print (test_routine(22))
+# print (test_routine(22))
