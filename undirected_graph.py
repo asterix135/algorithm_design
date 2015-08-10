@@ -16,6 +16,13 @@ class Vertex:
         self._id = key
         self._connected_to = []
 
+    def __str__(self):
+        """
+        returns human-readable version of vertex's connections
+        """
+        return str(self._id) + ' connected to ' + str([node.get_id() for node
+                                                       in self._connected_to])
+
     def add_neighbor(self, neighbor):
         """
         add connected vertex to the vertex's _connected_to
@@ -24,17 +31,10 @@ class Vertex:
 
     def remove_neighbor(self, neighbor):
         """
-        remove neighbor information from _connected_to list
+        remove one instance of neighbor information from _connected_to list
         """
         if neighbor in self._connected_to:
             self._connected_to.remove(neighbor)
-
-    def __str__(self):
-        """
-        returns human-readable version of vertex's connections
-        """
-        return str(self._id) + ' connected to ' + str([node._id for node in
-                                                       self._connected_to])
 
     def get_connections(self):
         """return list of connections"""
@@ -53,15 +53,33 @@ class Graph:
         creates a blank graph
         contains a dictionary - _vertex_list - mapping vertex keys to vertex
         objects and a count of the number of vertices in the graph
+        edge list contains a single list of edges stored as (head, tail) tuples
+            it's random whether a given vertex is head or tail
         """
         self._vertex_list = {}
-        self._vertex_count = 0
+        self._edge_list = []
+
+    def __contains__(self, key):
+        """
+        returns a boolean indicating whether a given vertex is in the graph
+        """
+        return key in self._vertex_list
+
+    def __iter__(self):
+        """returns an iterator of all vertices"""
+        return iter(self._vertex_list.values())
+
+    def __str__(self):
+        """returns human-readable list of nodes and neighbors"""
+        output_string = ""
+        for node in self._vertex_list:
+            output_string += str(self.get_vertex(node)) + '\n'
+        return output_string
 
     def create_vertex(self, key):
         """
         creates a new vertex and returns that vertex
         """
-        self._vertex_count += 1
         new_vertex = Vertex(key)
         self._vertex_list[key] = new_vertex
         return new_vertex
@@ -73,27 +91,20 @@ class Graph:
         else:
             return None
 
-    def __contains__(self, key):
-        """
-        returns a boolean indicating whether a given vertex is in the graph
-        """
-        return key in self._vertex_list
-
-    def add_edge(self, tail_key, head_key, weight=1):
+    def add_edge(self, tail_key, head_key):
         """
         adds a new edge to the graph. If either vertex is not present, it will
         be added first.
-        in directed graph, edge is only added for the tail vertex
+        neighbor info is added to both vertices' _connected_to lists
         """
         if tail_key not in self._vertex_list:
             self.create_vertex(tail_key)
         if head_key not in self._vertex_list:
             self.create_vertex(head_key)
-        self._vertex_list[tail_key].add_neighbor(self._vertex_list[head_key],
-                                                 weight)
-        if self._graph_type == 'u':
-            self._vertex_list[head_key].add_neighbor(self._vertex_list
-                                                     [tail_key], weight)
+        self._vertex_list[tail_key].add_neighbor(self._vertex_list[head_key])
+        self._vertex_list[head_key].add_neighbor(self._vertex_list[tail_key])
+        new_edge = [self.get_vertex(tail_key), self.get_vertex(head_key)]
+        self._edge_list.append(new_edge)
 
     def get_vertices(self):
         """
@@ -101,54 +112,91 @@ class Graph:
         """
         return self._vertex_list.keys()
 
-    def __iter__(self):
-        """returns an iterator of all vertices"""
-        return iter(self._vertex_list.values())
-
     def remove_vertex(self, key):
-        # TODO implement remove_vertex function
+        """
+        removes vertex from graph
+        also removes all edges referencing the vertex
+        """
         # 1. make sure vertex is in graph
+        if key not in self._vertex_list:
+            return None
         # 2. get list of connected vertices
+        connected_nodes = self._vertex_list[key].get_connections()
         # 3. remove all relevant edges from connected vertices
+        node_to_remove = self.get_vertex(key)
+        for node in connected_nodes:
+            while node_to_remove in node.get_connections():
+                node.remove_neighbor(node_to_remove)
+        # 4. update _edge_list
+        delete_list = []
+        for edge in self._edge_list:
+            if edge[0] == node_to_remove or edge[1] == node_to_remove:
+                delete_list.append(edge)
+        for edge_to_delete in delete_list:
+            self._edge_list.remove(edge_to_delete)
         # 4. remove actual vertex
+        self._vertex_list.pop(key)
         # 5. update vertex count
-        pass
 
-    def remove_edge(self, tail_id, head_id, weight=1):
-        # TODO implment remove_edge function
-        # 1. check list in tail_id & remove if found
-        pass
+    def remove_edge(self, tail, head):
+        """
+        removes one edge from a graph
+        takes two vertices (NOT IDs) as an argument
+        for each vertex, removes reference to other vertex
+        removes edge from graph's edge list
+        """
+        tail.remove_neighbor(head)
+        head.remove_neighbor(tail)
+        # should probably break out as separate function
+        if [head, tail] in self._edge_list:
+            self._edge_list.remove([head, tail])
+        else:
+            self._edge_list.remove([tail, head])
 
     def get_edges(self):
         """
         returns a list of edges in the graph
-        edges represented as a tuple: (tail, head, weight)
+        edges represented as a tuple: (tail, head)
         """
-        edge_list = []
-        for node in self._vertex_list:
-            edge_list.extend(node.get_connections())
-        return edge_list
+        return self._edge_list
 
     def get_edge_count(self):
+        """return number of edges in graph"""
         return len(self.get_edges())
 
-    def __str__(self):
-        # TODO create __str__ method for Graph Class
-        pass
+    def get_vertex_count(self):
+        """return number of vertices in graph"""
+        return len(self._vertex_list)
 
-
-def test():
-    g = Graph()
-    g.create_vertex(1)
-    g.create_vertex(2)
-    g.add_edge(1, 2)
-    g.add_edge(2, 3)
-    g.add_edge(3, 1)
-    g.add_edge(1, 2, 1)
-    print(str(g.get_vertex(1)))
-    print(str(g.get_vertex(2)))
-    print(str(g.get_vertex(3)))
-
-
-if __name__ == '__main__':
-    test()
+    def fuse_vertices(self, tail, head):
+        """
+        takes two vertices (NOT indexes) as arguments
+        fuses two vertices (head and tail)
+        deletes one edge between the two
+        adds head's neighbor list to tail
+        updates edge_list to replace all head references with tail
+        removes self-referential edges
+        """
+        # Make sure the vertices have an edge between them and delete that edge
+        if [tail, head] in self._edge_list:
+            self.remove_edge(tail, head)
+        elif [head, tail] in self._edge_list:
+            self.remove_edge(head, tail)
+        else:
+            return None
+        # get list of all neighbors for head and append to tail
+        # unless it would be a self-reference
+        for neighbor in head.get_connections():
+            if neighbor != tail:
+                tail.add_neighbor(neighbor)
+        # update edge_list by replacing head with tail in all edges
+        # and deleting resulting self-referenes
+        for edge in self._edge_list:
+            if edge[0] == head:
+                if edge[1] == tail:
+                    self._edge_list.remove(edge)
+                else:
+                    edge[0] = tail
+            elif edge[1] == head:
+                edge[1] = tail
+        self._vertex_list.pop(head.get_id())
