@@ -200,3 +200,8 @@ class Graph:
             elif edge[1] == head:
                 edge[1] = tail
         self._vertex_list.pop(head.get_id())
+
+    def copy_graph(self):
+        new_graph = Graph()
+        for vertex in self:
+            for
