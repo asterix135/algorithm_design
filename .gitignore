@@ -12,3 +12,7 @@ quiz_project_directions
 kargerMinCut.txt
 test_graph.txt
 test_graph_2.txt
+mincut.py
+directed_graph.py
+tests_undirected_graph_class.py
+undirected_graph.py

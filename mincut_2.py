@@ -79,11 +79,11 @@ def mincut(graph):
     for trial in range(len(graph)**2):
         trial_graph = copy.deepcopy(graph)
         trial_cut = len(cut(trial_graph)[0].get_edges())
-        if trial %500 == 0:
-            print('trial # ' + str(trial) + 'cut = ' + str(trial_cut))
         if trial_cut < best_cut:
             best_cut = trial_cut
             cut_graph = trial_graph
+        if trial % 500 == 0:
+            print('trial # ' + str(trial) + ' best cut = ' + str(best_cut))
     return best_cut, cut_graph
 
 
@@ -93,22 +93,17 @@ def create_graph(filename):
     assumes no parallel edges in originating graph file
     """
     graph_source = open(filename, 'r')
-    data = [[[int(line.split()[0])], [int(i) for i in line.split()[1:]]]
-            for line in graph_source]
-    graph = [Adjacency(i[0], i[1]) for i in data]
-
-
-
-    # structure is node, tab, edge, tab, edge, tab, etc
-    # graph_data = [[[int(line.split()[0])], [int(edge) for edge in
-    #                 line.split()[1:]]] for line in graph_source]
-    # graph = [Adjacency(node[0], node[1]) for node in graph_data]
+    graph_data = [[[int(line.split()[0])], [int(i) for i in line.split()[1:]]]
+                  for line in graph_source]
+    graph = [Adjacency(node[0], node[1]) for node in graph_data]
     graph_source.close()
     return graph
+
 
 def class_problem():
     best_cut = mincut(create_graph(FILENAME))
     return best_cut[0]
+
 
 if __name__ == '__main__':
     answer = class_problem()
