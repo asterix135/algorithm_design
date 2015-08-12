@@ -1,6 +1,7 @@
 """test battery for undirected graph class"""
 
 import undirected_graph as graph
+import random
 
 
 def test():
@@ -57,6 +58,17 @@ def test():
     print('vertices')
     print(g.get_vertex_count())
     print()
+
+    print('test fuse using an edge')
+    fuse_edge = random.choice(g.get_edges())
+    g.fuse_vertices(fuse_edge[0], fuse_edge[1])
+    print(str(g))
+    print("edges")
+    print(g.get_edge_count())
+    print('vertices')
+    print(g.get_vertex_count())
+    print()
+    print('tests complete')
 
 
 if __name__ == '__main__':

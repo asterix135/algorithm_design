@@ -71,9 +71,13 @@ class Graph:
 
     def __str__(self):
         """returns human-readable list of nodes and neighbors"""
-        output_string = ""
+        output_string = "Vertex List:\n"
         for node in self._vertex_list:
             output_string += str(self.get_vertex(node)) + '\n'
+        output_string += "Edge List:\n"
+        for edge in self.get_edges():
+            output_string += str(edge[0].get_id()) + ', ' \
+                + str(edge[1].get_id()) + '\n'
         return output_string
 
     def create_vertex(self, key):
@@ -178,20 +182,33 @@ class Graph:
         removes self-referential edges
         """
         # Make sure the vertices have an edge between them and delete that edge
-        if [tail, head] in self._edge_list:
+        # if [tail, head] in self._edge_list:
+        #     self.remove_edge(tail, head)
+        # elif [head, tail] in self._edge_list:
+        #     self.remove_edge(head, tail)
+        # else:
+        #     return None
+        while [tail, head] in self._edge_list:
             self.remove_edge(tail, head)
-        elif [head, tail] in self._edge_list:
+        while [head, tail] in self._edge_list:
             self.remove_edge(head, tail)
-        else:
-            return None
-        # get list of all neighbors for head and append to tail
-        # unless it would be a self-reference
+
+
+
+        # go through head neighbors
+        # for each - append neighbor to head unless it'd be self-referential
+        # also update neighbor list for each neighbor to refer to tail
+
         for neighbor in head.get_connections():
             if neighbor != tail:
                 tail.add_neighbor(neighbor)
+                neighbor.remove_neighbor(head)
+                neighbor.add_neighbor(tail)
+
         # update edge_list by replacing head with tail in all edges
         # and deleting resulting self-referenes
-        for edge in self._edge_list:
+        iterator_list = list(self._edge_list)
+        for edge in iterator_list:
             if edge[0] == head:
                 if edge[1] == tail:
                     self._edge_list.remove(edge)
@@ -203,5 +220,6 @@ class Graph:
 
     def copy_graph(self):
         new_graph = Graph()
-        for vertex in self:
-            for
+        for edge in self._edge_list:
+            new_graph.add_edge(edge[0].get_id(), edge[1].get_id())
+        return new_graph
