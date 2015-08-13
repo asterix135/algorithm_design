@@ -57,7 +57,6 @@ class Graph:
             it's random whether a given vertex is head or tail
         """
         self._vertex_list = {}
-        self._edge_list = []
 
     def __contains__(self, key):
         """
@@ -74,10 +73,6 @@ class Graph:
         output_string = "Vertex List:\n"
         for node in self._vertex_list:
             output_string += str(self.get_vertex(node)) + '\n'
-        output_string += "Edge List:\n"
-        for edge in self.get_edges():
-            output_string += str(edge[0].get_id()) + ', ' \
-                + str(edge[1].get_id()) + '\n'
         return output_string
 
     def create_vertex(self, key):
@@ -107,8 +102,6 @@ class Graph:
             self.create_vertex(head_key)
         self._vertex_list[tail_key].add_neighbor(self._vertex_list[head_key])
         self._vertex_list[head_key].add_neighbor(self._vertex_list[tail_key])
-        new_edge = [self.get_vertex(tail_key), self.get_vertex(head_key)]
-        self._edge_list.append(new_edge)
 
     def get_vertices(self):
         """
