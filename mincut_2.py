@@ -10,7 +10,7 @@ FILENAME = 'kargerMinCut.txt'
 # FILENAME = 'test_graph.txt'
 
 
-class Adjacency:
+class Vertex:
     """
     Class to keep track of nodes and edges in a graph
     The graph itself should be a list of these objects
@@ -36,15 +36,15 @@ class Adjacency:
         """returns list of edges included in current object"""
         return self._edge_list
 
-    def merge_nodes(self, other_adjacency):
+    def merge_nodes(self, other_vertex):
         """
         merges another node with this one
         keeps track of nodes merged
         eliminates self-referential edges
         """
-        self._node_list += other_adjacency.get_nodes()
+        self._node_list += other_vertex.get_nodes()
         new_edge_list = []
-        for merge_edge in other_adjacency.get_edges() + self._edge_list:
+        for merge_edge in other_vertex.get_edges() + self._edge_list:
             if merge_edge not in self._node_list:
                 new_edge_list.append(merge_edge)
         self._edge_list = new_edge_list
@@ -52,20 +52,20 @@ class Adjacency:
 
 def cut(graph, seed=None):
     """
-    recursive algorithm that returns two fused nodes (Adjacency objects)
+    recursive algorithm that returns two fused nodes (Vertex objects)
     showing best calculated cut
     """
     if len(graph) == 2:
         return graph
     else:
         random.seed(seed)
-        random_adjacency = random.choice(graph)
-        merge_target = random.choice(random_adjacency.get_edges())
+        random_vertex = random.choice(graph)
+        merge_target = random.choice(random_vertex.get_edges())
         for adj in graph:
             if merge_target in adj.get_nodes():
                 merge_partner = adj
                 break
-        random_adjacency.merge_nodes(merge_partner)
+        random_vertex.merge_nodes(merge_partner)
         graph.remove(merge_partner)
         return cut(graph, seed)
 
@@ -95,7 +95,7 @@ def create_graph(filename):
     graph_source = open(filename, 'r')
     graph_data = [[[int(line.split()[0])], [int(i) for i in line.split()[1:]]]
                   for line in graph_source]
-    graph = [Adjacency(node[0], node[1]) for node in graph_data]
+    graph = [Vertex(node[0], node[1]) for node in graph_data]
     graph_source.close()
     return graph
 
