@@ -1,56 +1,47 @@
-"""
-Simple breadth first search function
-"""
+"""modification of bfs to calculate shortest path"""
 
-import graph_class
+import bfs, graph_class
 
 
-class BfsVertex(graph_class.Vertex):
-    """
-    Minor class adjustments to make BFS work better
-    """
+class SpVertex(bfs.BfsVertex):
+    """Minor class adjustments for shortest path"""
 
     def __init__(self, vertex_id, edges=None):
         """
-        Adapt base class setup to make _node_id a list of lists:
-        [[node_id, explored],...]
+        Initialize _node_id as a 3-part list [id, explored, distance]
         """
-        # graph_class.Vertex.__init__(self, vertex_id, edges)
         super().__init__(vertex_id, edges)
         for node_number in range(len(self._node_id)):
-            self._node_id[node_number] = [self._node_id[node_number], False]
+            self._node_id[node_number] += [float('inf')]
 
-    def mark_explored(self):
-        """
-        Marks node as explored
-        """
-        for node in self.get_nodes():
-            node[1] = True
-
-    def __repr__(self):
-        """printable list of nodes and edges for the object"""
-        return "Node: " + str(self._node_id) + " Edge: " \
-               + str(self._edge_list)
+    def update_distance(self, new_distance):
+        """Update distance in node_id"""
+        self._node_id[0][2] = new_distance
 
 
-class BfsGraph(graph_class.Graph):
+class SpGraph(graph_class.Graph):
     """
-    minor class adjustments to make this work better
+    amend class to create vertex using SpVertex class
     """
 
     def create_vertex(self, key):
         """
         creates a new vertex and returns that vertex
         """
-        new_vertex = BfsVertex(key)
+        new_vertex = SpVertex(key)
         self._vertex_list[key] = new_vertex
         return new_vertex
 
 
-def bfs(graph, start_node=1):
-    """Basic BFS function"""
+def shortest_path(graph, start_node=1):
+    """
+    takes graph and start node as input
+    for each vertex, calculates shortest past from start node
+    update vertex's node_id to include distance
+    """
     search_queue = []
     start_vertex = graph.get_vertex(start_node)
+    start_vertex.update_distance(0)
     search_queue.append(start_vertex)
     start_vertex.mark_explored()
     while len(search_queue) > 0:
@@ -59,6 +50,7 @@ def bfs(graph, start_node=1):
             linked_vertex = graph.get_vertex(edge)
             if not linked_vertex.get_nodes()[0][1]:
                 linked_vertex.mark_explored()
+                linked_vertex.update_distance(active_node.get_nodes()[0][2] + 1)
                 search_queue.append(linked_vertex)
 
 
@@ -66,7 +58,7 @@ def create_graph(graph_data):
     """
     create graph class object from file
     """
-    new_graph = BfsGraph()
+    new_graph = SpGraph()
     for item in range(len(graph_data)):
         new_graph.create_vertex(graph_data[item][0][0])
         for edge in range(len(graph_data[item][1])):
@@ -86,5 +78,5 @@ if __name__ == '__main__':
     test_graph = create_graph(test_graph_data)
     print(str(test_graph))
     print('run bfs')
-    bfs(test_graph, 1)
+    shortest_path(test_graph, 1)
     print(str(test_graph))
