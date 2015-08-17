@@ -16,7 +16,7 @@ class Vertex:
         if isinstance(vertex_id, list):
             self._node_id = vertex_id
         else:
-            self._id = [vertex_id]
+            self._node_id = [vertex_id]
 
         if isinstance(edges, list):
             self._edge_list = edges
@@ -114,14 +114,14 @@ class Graph:
         be added first.
         if type is u,neighbor info is added to both vertices' edge lists
         """
-        if tail_key not in self._vertex_list:
+        if tail_key not in self._vertex_list.keys():
             self.create_vertex(tail_key)
-        if head_key not in self._vertex_list:
+        if head_key not in self._vertex_list.keys():
             self.create_vertex(head_key)
-        self._vertex_list[tail_key].add_neighbor(self._vertex_list[head_key])
+        self._vertex_list[tail_key].add_edge(self._vertex_list[head_key].get_nodes())
         if self._type == 'u':
-            self._vertex_list[head_key].add_neighbor(
-                self._vertex_list[tail_key])
+            self._vertex_list[head_key].add_edge(
+                self._vertex_list[tail_key].get_nodes())
 
     def get_vertices(self):
         """
