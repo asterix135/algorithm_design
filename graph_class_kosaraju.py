@@ -1,7 +1,10 @@
 """
-Base graph class
+Graph Class for Kosaraju's Algorithm
 """
 
+# TODO: 1) merge all the various things scattered across differnt scripts
+# TODO: 2) think about changes needed for Kosaraju
+# TODO: 3) Think about how to have the graph class keep track of sorts
 
 class Vertex:
     """
@@ -12,6 +15,7 @@ class Vertex:
         """
         Vertex takes two parameters - vertex_id and optional edges
         both are lists
+        initializes node_id, edge list, explored value
         """
         if isinstance(vertex_id, list):
             self._node_id = vertex_id
@@ -22,6 +26,9 @@ class Vertex:
             self._edge_list = edges
         else:
             self._edge_list = [edges] if edges is not None else []
+
+        self._explored = False
+
 
     def __repr__(self):
         """printable list of nodes and edges for the object"""

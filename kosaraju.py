@@ -1,0 +1,48 @@
+"""
+Kosaraju's Algorithm for finding Strongly Connected Components
+"""
+
+# TODO: 1) Set up graph class for algorithm
+# TODO: 2) Implement algorithm
+
+
+# Kosaraju's Two-Pass Algorithm
+#
+# basically 2 passes of DFS
+#
+# Given Graph G
+#
+# 1) Let G(rev) = G with all arcs reversed
+# 2) Run DFS-Loop on G(rev) - n.b. you don't have to copy G into G(rev)
+#      DFS-Loop means you have an outer loop where you look at each node in order
+#      Goal: discover "magical ordering" of nodes for step 3
+# 2a) Let f(v) = 'finishing time' of each Vertex
+# 3) Run DFS-Loop on the original graph G
+#      Goal: discover SCC's 1 by 1
+#      Process nodes in decreasing order of finishing times
+#      Label each node with a "leader"
+#      SCCs are elements with the same 'leader'
+#
+#
+# DFS-Loop(Graph G)
+# global variable t=0 (# of nodes processed so far - gives us finishing times from 1st class)
+# global variable S= Null (keeps track of most recent vertex from which DFS was called - leaders in 2nd pass)
+#
+# In 1st DFS, we go through in some arbitrary order
+# In 2nd DFS we go through in order of decreasing finishing time
+#
+# For i = n down to 1
+#      if i not yet explored
+#           S = i
+#           DFS (G, i)
+#
+# DFS(G, i)
+#      - mark i as explored (for rest of DFS-Loop)
+#      - set leader(i) = node S
+#      - for each arc (i,j) in G:
+#           if j not yet explored:
+#                DFS (G, j)
+#      - t += 1
+#      - set f ( i ) = t  (f(i) is the finishing time for a node)
+#
+# Need to keep track of how you keep track of finishing times so you don't have to sort them

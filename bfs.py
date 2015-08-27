@@ -27,6 +27,19 @@ class BfsVertex(graph_class.Vertex):
         for node in self.get_nodes():
             node[1] = True
 
+    def mark_unexplored(self):
+        """
+        Marks node as unexplored
+        """
+        for node in self.get_nodes():
+            node[1] = False
+
+    def explored_value(self):
+        """
+        returns boolean as to whether node is explored
+        """
+        return self.get_nodes()[1]
+
     def __repr__(self):
         """printable list of nodes and edges for the object"""
         return "Node: " + str(self._node_id) + " Edge: " \
