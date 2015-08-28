@@ -18,17 +18,27 @@ def kosaraju(graph):
         # TODO: implement dfs
         nonlocal time_value, start_vertex
         start_vertex = graph.vertex(node)
+        start_vertex.mark_explored()
+        for edge in start_vertex.get_edges():
+            linked_vertex = graph.get_vertex(edge)
+            if not linked_vertex.is_explored():
+                dfs(graph, edge)
+        time_value += 1
+        node.set_finishing_time(time_value)
 
 
-    def dfs_loop(graph):
+
+    def dfs_loop(graph, order_list):
         # TODO: implment dfs_loop
         for node in graph:
             node.mark_unexplored()
         # TODO: This ordering won't work - need to fix
-        for node in graph:
+        for node in order_list:
             if not node.is_explored():
                 dfs(rev_graph, node.get_node_id())
         return graph
+
+
 
 
 
