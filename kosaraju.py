@@ -14,14 +14,22 @@ def kosaraju(graph):
     start_vertex = None
     pass2_order = []
 
-    def dfs():
+    def dfs(graph, node):
         # TODO: implement dfs
-        pass
+        nonlocal time_value, start_vertex
+        start_vertex = graph.vertex(node)
 
-    def dfs_pass():
-        # TODO: implment dfs_pass
-        for node in rev_graph:
-            pass
+
+    def dfs_loop(graph):
+        # TODO: implment dfs_loop
+        for node in graph:
+            node.mark_unexplored()
+        # TODO: This ordering won't work - need to fix
+        for node in graph:
+            if not node.is_explored():
+                dfs(rev_graph, node.get_node_id())
+        return graph
+
 
 
 
