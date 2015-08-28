@@ -1,5 +1,5 @@
 """
-Base graph class
+Base graph class - impvoed
 """
 
 
@@ -13,10 +13,7 @@ class Vertex:
         Vertex takes two parameters - vertex_id and optional edges
         vertex_id is a number, vertex_id is a list
         """
-        if isinstance(vertex_id, list):
-            self._node_id = vertex_id
-        else:
-            self._node_id = [vertex_id]
+        self._node_id = vertex_id
 
         if isinstance(edges, list):
             self._edge_list = edges
@@ -28,12 +25,12 @@ class Vertex:
         return "Node: " + str(self._node_id) + " Edge: " \
                + str(self._edge_list)
 
-    def get_nodes(self):
-        """returns list of node ids included in current object"""
+    def get_node_id(self):
+        """returns vertex's node_kd"""
         return self._node_id
 
     def get_edges(self):
-        """returns list of edges included in current object"""
+        """returns list of edges for current vertex"""
         return self._edge_list
 
     def add_edge(self, neighbor):
@@ -109,10 +106,10 @@ class Graph:
             self.create_vertex(tail_key)
         if head_key not in self._vertex_list.keys():
             self.create_vertex(head_key)
-        self._vertex_list[tail_key].add_edge(self._vertex_list[head_key].get_nodes())
+        self._vertex_list[tail_key].add_edge(self._vertex_list[head_key].get_node_id())
         if self._type == 'u':
             self._vertex_list[head_key].add_edge(
-                self._vertex_list[tail_key].get_nodes())
+                self._vertex_list[tail_key].get_node_id())
 
     def get_vertices(self):
         """

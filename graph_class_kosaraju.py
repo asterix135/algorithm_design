@@ -2,11 +2,13 @@
 Graph Class for Kosaraju's Algorithm
 """
 
-# TODO: 1) merge all the various things scattered across differnt scripts
-# TODO: 2) think about changes needed for Kosaraju
-# TODO: 3) Think about how to have the graph class keep track of sorts
+import graph_class_new
 
-class Vertex:
+# TODO: 1) think about changes needed for Kosaraju
+# TODO: 2) Think about how to have the graph class keep track of sorts
+
+
+class KjVertex(graph_class_new.Vertex):
     """
     Vertex class for Graph
     """
@@ -15,131 +17,78 @@ class Vertex:
         """
         Vertex takes two parameters - vertex_id and optional edges
         both are lists
-        initializes node_id, edge list, explored value
+        initializes node_id, edge list, explored value, finishing time
+        & leader
         """
-        if isinstance(vertex_id, list):
-            self._node_id = vertex_id
-        else:
-            self._node_id = [vertex_id]
-
-        if isinstance(edges, list):
-            self._edge_list = edges
-        else:
-            self._edge_list = [edges] if edges is not None else []
-
+        super().__init__(vertex_id, edges)
         self._explored = False
-
+        self._finishing_time = 0
+        self._leader = 0
 
     def __repr__(self):
-        """printable list of nodes and edges for the object"""
-        return "Node: " + str(self._node_id) + " Edge: " \
-               + str(self._edge_list)
-
-    def get_nodes(self):
-        """returns list of node ids included in current object"""
-        return self._node_id
-
-    def get_edges(self):
-        """returns list of edges included in current object"""
-        return self._edge_list
-
-    def add_edge(self, neighbor):
-        """
-        add connected vertex to the vertex's edge list
-        """
-        self._edge_list.append(neighbor)
-
-    def remove_edge(self, neighbor):
-        """
-        remove one instance of neighbor information from edge list
-        """
-        while neighbor in self._edge_list:
-            self._edge_list.remove(neighbor)
-
-    def merge_nodes(self, other_vertex):
-        """
-        merges another node with this one
-        keeps track of nodes merged
-        eliminates self-referential edges
-        """
-        self._node_id += other_vertex.get_nodes()
-        new_edge_list = []
-        for merge_edge in other_vertex.get_edges() + self._edge_list:
-            if merge_edge not in self._node_id:
-                new_edge_list.append(merge_edge)
-        self._edge_list = new_edge_list
-
-
-class Graph:
-    """
-    Basic graph class
-    """
-
-    def __init__(self, graph_type='u'):
-        """
-        No parameters needed - creates empty vertex dictionary
-        by default initialized as undirected - set type to 'd' for directed
-        """
-        self._vertex_list = {}
-        self._type = graph_type
-
-    def __contains__(self, key):
-        """
-        returns a boolean indicating whether a given vertex is in the graph
-        """
-        return key in self._vertex_list
-
-    def __iter__(self):
-        """returns an iterator of all vertices"""
-        return iter(self._vertex_list.values())
+        """debug representation"""
+        expl = "explored" if self._explored else "unexplored"
+        return "Node " + str(self._node_id) + expl + " finish " + \
+               str(self._finishing_time) + " leader " + str(self._leader)
 
     def __str__(self):
-        """returns human-readable list of nodes and neighbors"""
-        output_string = "Vertex List:\n"
-        for node in self._vertex_list:
-            output_string += str(self.get_vertex(node)) + '\n'
-        return output_string
+        """printable list of nodes and edges for the object"""
+        return "Node: " + str(self._node_id) + ", Explored: " + \
+               str(self._explored) + \
+               "\n  Edge: " + str(self._edge_list)
 
-    def __len__(self):
-        """returns length of self._vertex_list"""
-        return len(self._vertex_list)
+    def mark_explored(self):
+        """Marks vertex as explored"""
+        self._explored = True
+
+    def mark_unexplored(self):
+        """Marks vertex as unexplored"""
+        self._explored = False
+
+    def is_explored(self):
+        """Returns boolean _explored value"""
+        return self._explored
+
+    def set_finishing_time(self, time_value):
+        """sets finishing time value"""
+        self._finishing_time = time_value
+
+    def get_finishing_time(self):
+        """returns finishing time value"""
+        return self._finishing_time
+
+    def set_leader(self, leader_value):
+        """sets value of leader"""
+        self._leader = leader_value
+
+    def get_leader(self):
+        """returns leader value"""
+        return self._leader
+
+
+class KjGraph(graph_class_new.Graph):
+    """
+    Modifications to basic Graph Class
+    """
 
     def create_vertex(self, key):
         """
-        creates a new vertex and returns that vertex
+        creates a new vertex of KjVertex class and returns that vertex
         """
-        new_vertex = Vertex(key)
+        new_vertex = KjVertex(key)
         self._vertex_list[key] = new_vertex
         return new_vertex
 
-    def get_vertex(self, key):
-        """ returns the vertex object associated with a key """
-        if key in self._vertex_list:
-            return self._vertex_list[key]
-        else:
-            return None
-
-    def add_edge(self, tail_key, head_key):
+    def reverse_graph(self):
         """
-        adds a new edge to the graph. If either vertex is not present, it will
-        be added first.
-        if type is u,neighbor info is added to both vertices' edge lists
+        reverses a directed graph and returns reversed graph
+        for undirected graph, just returns self
         """
-        if tail_key not in self._vertex_list.keys():
-            self.create_vertex(tail_key)
-        if head_key not in self._vertex_list.keys():
-            self.create_vertex(head_key)
-        self._vertex_list[tail_key].add_edge(self._vertex_list[head_key].get_nodes())
         if self._type == 'u':
-            self._vertex_list[head_key].add_edge(
-                self._vertex_list[tail_key].get_nodes())
-
-    def get_vertices(self):
-        """
-        return a list of keys of all vertices in the graph
-        """
-        return self._vertex_list.keys()
-
-    def get_vertex_count(self):
-        """return number of vertices in graph"""
-        return len(self._vertex_list)
+            return self
+        reversed_graph = KjGraph('d')
+        for vertex in self:
+            for edge in vertex.get_edges():
+                reversed_graph.add_edge(edge.get_node_id(),
+                                        vertex.get_node_id())
+        return reversed_graph
