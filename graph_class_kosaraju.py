@@ -4,7 +4,6 @@ Graph Class for Kosaraju's Algorithm
 
 import graph_class_new
 
-# TODO: 1) think about changes needed for Kosaraju
 # TODO: 2) Think about how to have the graph class keep track of sorts
 
 
@@ -34,7 +33,8 @@ class KjVertex(graph_class_new.Vertex):
     def __str__(self):
         """printable list of nodes and edges for the object"""
         return "Node: " + str(self._node_id) + ", Explored: " + \
-               str(self._explored) + \
+               str(self._explored) + ", Finish time: " + \
+               str(self._finishing_time) + ", Leader: " + str(self._leader) + \
                "\n  Edge: " + str(self._edge_list)
 
     def mark_explored(self):
@@ -89,6 +89,32 @@ class KjGraph(graph_class_new.Graph):
         reversed_graph = KjGraph('d')
         for vertex in self:
             for edge in vertex.get_edges():
-                reversed_graph.add_edge(edge.get_node_id(),
-                                        vertex.get_node_id())
+                reversed_graph.add_edge(edge, vertex.get_node_id())
         return reversed_graph
+
+
+def create_kj_graph(graph_data):
+    """
+    creates a new Graph based on input data
+    data needs to be in format [[vertex_id, [edge list]], etc...]
+    """
+    new_graph = KjGraph('d')
+    for item in range(len(graph_data)):
+        new_graph.create_vertex(graph_data[item][0])
+        for edge in range(len(graph_data[item][1])):
+            new_graph.get_vertex(
+                graph_data[item][0]).add_edge(graph_data[item][1][edge])
+    return new_graph
+
+if __name__ == '__main__':
+    test_graph = [[1, [2]],
+                  [2, [3]],
+                  [3, [1, 4]],
+                  [4, [5]],
+                  [5, [6]],
+                  [6, [4]]]
+
+    test_graph = create_kj_graph(test_graph)
+    print(str(test_graph))
+    reverse_graph = test_graph.reverse_graph()
+    print(str(reverse_graph))

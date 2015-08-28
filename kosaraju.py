@@ -2,12 +2,29 @@
 Kosaraju's Algorithm for finding Strongly Connected Components
 """
 
-# TODO: 1) Set up graph class for algorithm
+import graph_class_kosaraju as gc
+
+# TODO: 1) Figure out how to have graph class keep track of sorts
 # TODO: 2) Implement algorithm
 
 
-# Kosaraju's Two-Pass Algorithm
-#
+def kosaraju(graph):
+    rev_graph = graph.reverse_graph()
+    time_value = 0
+    start_vertex = None
+    pass2_order = []
+
+    def dfs():
+        # TODO: implement dfs
+        pass
+
+    def dfs_pass():
+        # TODO: implment dfs_pass
+        for node in rev_graph:
+            pass
+
+
+
 # basically 2 passes of DFS
 #
 # Given Graph G
@@ -46,3 +63,14 @@ Kosaraju's Algorithm for finding Strongly Connected Components
 #      - set f ( i ) = t  (f(i) is the finishing time for a node)
 #
 # Need to keep track of how you keep track of finishing times so you don't have to sort them
+
+
+
+test_graph = [[1, [2]],
+              [2, [3]],
+              [3, [1, 4]],
+              [4, [5]],
+              [5, [6]],
+              [6, [4]]]
+
+test_graph = gc.create_kj_graph(test_graph)
