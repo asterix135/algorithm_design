@@ -11,32 +11,40 @@ import graph_class_kosaraju as gc
 def kosaraju(graph):
     rev_graph = graph.reverse_graph()
     time_value = 0
-    start_vertex = None
+    start_value = None
+    pass1_order = list(graph.get_vertices())
+    pass1_order.sort(reverse=True)
     pass2_order = []
 
-    def dfs(graph, node):
-        # TODO: implement dfs
-        nonlocal time_value, start_vertex
-        start_vertex = graph.vertex(node)
+    def dfs(graph_dfs, node):
+        nonlocal time_value, start_value
+        start_vertex = graph_dfs.get_vertex(node)
         start_vertex.mark_explored()
+        start_vertex.set_leader(start_value)
         for edge in start_vertex.get_edges():
-            linked_vertex = graph.get_vertex(edge)
+            linked_vertex = graph_dfs.get_vertex(edge)
             if not linked_vertex.is_explored():
-                dfs(graph, edge)
+                dfs(graph_dfs, edge)
         time_value += 1
-        node.set_finishing_time(time_value)
+        start_vertex.set_finishing_time(time_value)
+        pass2_order.insert(0, start_vertex.get_node_id())
 
-
-
-    def dfs_loop(graph, order_list):
-        # TODO: implment dfs_loop
-        for node in graph:
+    def dfs_loop(graph_loop, order_list):
+        nonlocal start_value
+        for node in graph_loop:
             node.mark_unexplored()
         # TODO: This ordering won't work - need to fix
-        for node in order_list:
+        for vertex_number in order_list:
+            node = graph_loop.get_vertex(vertex_number)
             if not node.is_explored():
-                dfs(rev_graph, node.get_node_id())
+                start_value = node.get_node_id()
+                dfs(graph_loop, start_value)
         return graph
+
+    dfs_loop(rev_graph, pass1_order)
+    print('rev_graph after dfs \n' + str(rev_graph))
+    pass2_copy=pass2_order.copy()
+    dfs_loop(graph, pass2_copy)
 
 
 
@@ -92,3 +100,7 @@ test_graph = [[1, [2]],
               [6, [4]]]
 
 test_graph = gc.create_kj_graph(test_graph)
+
+# print(str(test_graph))
+kosaraju(test_graph)
+print('Result:\n' + str(test_graph))

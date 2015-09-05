@@ -1,0 +1,5 @@
+https://class.coursera.org/algo-008/quiz
+
+https://class.coursera.org/algo-008/quiz?quiz_type=homework
+
+https://class.coursera.org/algo-008/quiz?quiz_type=exam
