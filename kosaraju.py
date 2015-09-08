@@ -46,10 +46,11 @@ def kosaraju(graph):
                 linked_vertex = graph_dfs.get_vertex(edge)
                 if not linked_vertex.is_explored():
                     linked_vertex.mark_explored()
+                    linked_vertex.set_leader(start_value)
                     search_stack.append(linked_vertex)
-        time_value += 1
-        start_vertex.set_finishing_time(time_value)
-        pass2_order.insert(0, start_vertex.get_node_id())
+            time_value += 1
+            active_node.set_finishing_time(time_value)
+            pass2_order.append(active_node.get_node_id())
 
 
     def dfs_loop(graph_loop, order_list):
@@ -66,30 +67,32 @@ def kosaraju(graph):
         return graph
 
     dfs_loop(rev_graph, pass1_order)
+    print("pass 1 done")
     pass2_copy = pass2_order.copy()
     dfs_loop(graph, pass2_copy)
+    print("all done")
 
 
 if __name__ == '__main__':
-    test_graph = [[1, [2]],
-                  [2, [3]],
-                  [3, [1, 4]],
-                  [4, [5]],
-                  [5, [6]],
-                  [6, [4]]]
-
     # test_graph = [[1, [2]],
-    #               [2, [3, 4, 5]],
-    #               [3, [6]],
-    #               [4, [7, 5]],
-    #               [5, [2, 6, 7]],
-    #               [6, [3, 8]],
-    #               [7, [8, 10]],
-    #               [8, [7]],
-    #               [9, [7]],
-    #               [10, [9, 11]],
-    #               [11, [12]],
-    #               [12, [10]]]
+    #               [2, [3]],
+    #               [3, [1, 4]],
+    #               [4, [5]],
+    #               [5, [6]],
+    #               [6, [4]]]
+
+    test_graph = [[1, [2]],
+                  [2, [3, 4, 5]],
+                  [3, [6]],
+                  [4, [7, 5]],
+                  [5, [2, 6, 7]],
+                  [6, [3, 8]],
+                  [7, [8, 10]],
+                  [8, [7]],
+                  [9, [7]],
+                  [10, [9, 11]],
+                  [11, [12]],
+                  [12, [10]]]
 
     test_graph = gc.create_kj_graph(test_graph)
 

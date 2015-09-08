@@ -1,9 +1,9 @@
 import kosaraju
-import sys
+# import sys
 # import resource
 
 
-sys.setrecursionlimit(10**6)
+# sys.setrecursionlimit(10**6)
 # resource.setrlimit(resource.RLIMIT_STACK, (2 ** 29, 2 ** 30))
 
 
