@@ -32,6 +32,26 @@ def kosaraju(graph):
         start_vertex.set_finishing_time(time_value)
         pass2_order.insert(0, start_vertex.get_node_id())
 
+    def dfs_non_recursive(graph_dfs, node):
+        """modified, non-recursive dfs to prevent stack overflow problems"""
+        nonlocal time_value, start_value
+        search_stack = []
+        start_vertex = graph_dfs.get_vertex(node)
+        search_stack.append(start_vertex)
+        start_vertex.mark_explored()
+        start_vertex.set_leader(start_value)
+        while len(search_stack) > 0:
+            active_node = search_stack.pop()
+            for edge in active_node.get_edges():
+                linked_vertex = graph_dfs.get_vertex(edge)
+                if not linked_vertex.is_explored:
+                    linked_vertex.mark_explored()
+                    search_stack.append(linked_vertex)
+        time_value += 1
+        start_vertex.set_finishing_time(time_value)
+        pass2_order.insert(0, start_vertex.get_node_id())
+
+
     def dfs_loop(graph_loop, order_list):
         """main outer loop for algorithm"""
         nonlocal start_value
@@ -41,7 +61,8 @@ def kosaraju(graph):
             node = graph_loop.get_vertex(vertex_number)
             if not node.is_explored():
                 start_value = node.get_node_id()
-                dfs(graph_loop, start_value)
+                # dfs(graph_loop, start_value)
+                dfs_non_recursive(graph_loop, start_value)
         return graph
 
     dfs_loop(rev_graph, pass1_order)
@@ -50,25 +71,25 @@ def kosaraju(graph):
 
 
 if __name__ == '__main__':
-    # test_graph = [[1, [2]],
-    #               [2, [3]],
-    #               [3, [1, 4]],
-    #               [4, [5]],
-    #               [5, [6]],
-    #               [6, [4]]]
-
     test_graph = [[1, [2]],
-                  [2, [3, 4, 5]],
-                  [3, [6]],
-                  [4, [7, 5]],
-                  [5, [2, 6, 7]],
-                  [6, [3, 8]],
-                  [7, [8, 10]],
-                  [8, [7]],
-                  [9, [7]],
-                  [10, [9, 11]],
-                  [11, [12]],
-                  [12, [10]]]
+                  [2, [3]],
+                  [3, [1, 4]],
+                  [4, [5]],
+                  [5, [6]],
+                  [6, [4]]]
+
+    # test_graph = [[1, [2]],
+    #               [2, [3, 4, 5]],
+    #               [3, [6]],
+    #               [4, [7, 5]],
+    #               [5, [2, 6, 7]],
+    #               [6, [3, 8]],
+    #               [7, [8, 10]],
+    #               [8, [7]],
+    #               [9, [7]],
+    #               [10, [9, 11]],
+    #               [11, [12]],
+    #               [12, [10]]]
 
     test_graph = gc.create_kj_graph(test_graph)
 
