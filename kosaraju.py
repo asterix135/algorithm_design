@@ -44,7 +44,7 @@ def kosaraju(graph):
             active_node = search_stack.pop()
             for edge in active_node.get_edges():
                 linked_vertex = graph_dfs.get_vertex(edge)
-                if not linked_vertex.is_explored:
+                if not linked_vertex.is_explored():
                     linked_vertex.mark_explored()
                     search_stack.append(linked_vertex)
         time_value += 1
