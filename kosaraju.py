@@ -2,14 +2,12 @@
 Kosaraju's Algorithm for finding Strongly Connected Components
 """
 
-import graph_class_kosaraju as gc
-
-
 def kosaraju(graph):
     """
     runs kosaraju's algorithim on a directed graph to calculate
     strongly connected components
     takes graph as input and modifies that graph
+    graph must be from kosaraju_graph_class
     """
     rev_graph = graph.reverse_graph()
     time_value = 0
@@ -73,29 +71,3 @@ def kosaraju(graph):
     print("all done")
 
 
-if __name__ == '__main__':
-    # test_graph = [[1, [2]],
-    #               [2, [3]],
-    #               [3, [1, 4]],
-    #               [4, [5]],
-    #               [5, [6]],
-    #               [6, [4]]]
-
-    test_graph = [[1, [2]],
-                  [2, [3, 4, 5]],
-                  [3, [6]],
-                  [4, [7, 5]],
-                  [5, [2, 6, 7]],
-                  [6, [3, 8]],
-                  [7, [8, 10]],
-                  [8, [7]],
-                  [9, [7]],
-                  [10, [9, 11]],
-                  [11, [12]],
-                  [12, [10]]]
-
-    test_graph = gc.create_kj_graph(test_graph)
-
-    # print(str(test_graph))
-    kosaraju(test_graph)
-    print('Result:\n' + str(test_graph))
