@@ -66,6 +66,10 @@ def kosaraju(graph):
 
     dfs_loop(rev_graph, pass1_order)
     print("pass 1 done")
+
+    # TODO: Delete when working
+    print(pass2_order)
+
     pass2_copy = pass2_order.copy()
     dfs_loop(graph, pass2_copy)
     print("all done")

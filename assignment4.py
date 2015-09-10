@@ -1,4 +1,5 @@
 import kosaraju
+import graph_class_kosaraju as gc
 import collections
 
 
@@ -7,7 +8,7 @@ def read_in_graph():
     reads in a text respresentation of a graph where each line consists
     of tail and head of an edge
     """
-    problem_graph = kosaraju.gc.KjGraph('d')
+    problem_graph = gc.KjGraph('d')
     # filename = "SCC.txt"
     filename = "test_scc.txt"
     with open(filename) as file_in:
