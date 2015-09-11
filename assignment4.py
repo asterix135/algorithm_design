@@ -9,8 +9,8 @@ def read_in_graph():
     of tail and head of an edge
     """
     problem_graph = gc.KjGraph('d')
-    # filename = "SCC.txt"
-    filename = "test_scc.txt"
+    filename = "SCC.txt"
+    # filename = "test_scc.txt"
     with open(filename) as file_in:
         for line in file_in:
             val = line.strip().split()
@@ -35,7 +35,7 @@ def top5_sccs(graph):
                                                       key=lambda t: -t[1]))
     top5 = []
     for item in range(min(5, len(scc_sizes))):
-        top5.append(sorted_scc_sizes.popitem(0))
+        top5.append(sorted_scc_sizes.popitem(0)[1])
     return top5
 
 

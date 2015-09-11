@@ -10,10 +10,12 @@ def kosaraju(graph):
     graph must be from kosaraju_graph_class
     """
     rev_graph = graph.reverse_graph()
+    print("graph reversed")
     time_value = 0
     start_value = None
     pass1_order = list(graph.get_vertices())
     pass1_order.sort(reverse=True)
+    print("pass 1 order calculated")
     pass2_order = []
 
     def dfs(graph_dfs, node):
@@ -36,19 +38,22 @@ def kosaraju(graph):
         search_stack = []
         start_vertex = graph_dfs.get_vertex(node)
         search_stack.append(start_vertex)
-        start_vertex.mark_explored()
-        start_vertex.set_leader(start_value)
         while len(search_stack) > 0:
             active_node = search_stack.pop()
-            for edge in active_node.get_edges():
-                linked_vertex = graph_dfs.get_vertex(edge)
-                if not linked_vertex.is_explored():
-                    linked_vertex.mark_explored()
-                    linked_vertex.set_leader(start_value)
-                    search_stack.append(linked_vertex)
-            time_value += 1
-            active_node.set_finishing_time(time_value)
-            pass2_order.append(active_node.get_node_id())
+            active_node_id = active_node.get_node_id()
+            if not active_node.is_explored():
+                active_node.mark_explored()
+                active_node.set_leader(start_value)
+                search_stack.append(active_node)
+                for edge in active_node.get_edges():
+                    linked_vertex = graph_dfs.get_vertex(edge)
+                    if not linked_vertex.is_explored():
+                        search_stack.append(linked_vertex)
+            elif active_node.get_finishing_time() == 0:
+            # elif active_node_id not in pass2_order:
+                time_value += 1
+                active_node.set_finishing_time(time_value)
+                pass2_order.insert(0, active_node_id)
 
 
     def dfs_loop(graph_loop, order_list):
@@ -56,9 +61,11 @@ def kosaraju(graph):
         nonlocal start_value
         for node in graph_loop:
             node.mark_unexplored()
+            # node.set_finishing_time(0)
         for vertex_number in order_list:
             node = graph_loop.get_vertex(vertex_number)
             if not node.is_explored():
+                # print(vertex_number)
                 start_value = node.get_node_id()
                 # dfs(graph_loop, start_value)
                 dfs_non_recursive(graph_loop, start_value)
@@ -66,12 +73,8 @@ def kosaraju(graph):
 
     dfs_loop(rev_graph, pass1_order)
     print("pass 1 done")
-
-    # TODO: Delete when working
-    print(pass2_order)
-
     pass2_copy = pass2_order.copy()
     dfs_loop(graph, pass2_copy)
-    print("all done")
+    print("pass 2 done")
 
 
